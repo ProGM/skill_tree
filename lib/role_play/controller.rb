@@ -11,7 +11,11 @@ module RolePlay
       end
 
       def can?(action, resource)
-        User.can?(current_user, action, resource)
+        if current_user
+          current_user.can?(action, resource)
+        else
+          resource.default_permission?(action, :guest)
+        end
       end
 
       private
@@ -23,7 +27,7 @@ module RolePlay
       def can_access?
         acl = current_acl[action_name]
         if acl.respond_to? :call
-          acl.call
+          instance_eval(&acl)
         else
           acl || current_acl[:all]
         end

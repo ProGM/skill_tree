@@ -78,10 +78,14 @@ end
 
 Let's take a look:
 `:guest` role is a special one: it's the default role for users with no-user (example: users not logged in).
-`:user` is the default logged-user role
+
+`:user` is the default logged-user role.
+
 Then we have an `:editor` and an `:admin`.
 
-`default_for` means that all posts will have this acl set as default one. You can have multiple acl for a single resource type, for example a **private** post could have an acl like this:
+`default_for` means that all posts will have this acl set as default one.
+
+In fact you can have multiple acl for a single resource type. For example a **private** post could have an acl like this:
 
 
 ```ruby
@@ -122,20 +126,20 @@ user = User.first
 resource = Post.first
 ```
 
-Set a role to an user:
+### Set a role to an user:
 
 ```ruby
 user.role! :editor, resource
 ```
 
-Check permissions:
+### Check permissions:
 
 ```ruby
 user.can? :write, resource # => true
 user.can? :update, resource # => false
 ```
 
-Remove roles:
+### Remove roles:
 
 ```ruby
 user.unrole! :editor, resource
@@ -143,7 +147,7 @@ user.can? :write, resource # => false
 user.can? :read, resource # => true (fallback to :user role)
 ```
 
-Check roles:
+### Check roles:
 
 ```ruby
 user.role! :editor, resource
@@ -151,9 +155,46 @@ user.role? :editor, resource # => true
 user.role? :admin, resource # => false
 ```
 
+### List all posts given a permission
+
+```ruby
+Post.where_user_can(user, :read)
+```
+
 ## Controller methods
 
-TODO
+First of all, let's include RolePlay in ApplicationController
+
+```ruby
+  include RolePlay::Controller
+```
+
+As a default behaviour, RolePlay negates access to **any** action of **any** controller (security by default).
+
+You can use the `allow` method to decide which action allow to be accessed.
+
+Here's an example:
+
+```ruby
+class MyController < ApplicationController
+  allow(:index, :show) { true } # Everyone can access to index and key
+  allow(:create) { current_user } # Only logged user can create
+  allow(:update) { can?(:update, resource) } # Only logged user can create
+  allow(:destroy) { can?(:destroy, resource) } # Only logged user can create
+
+  def index; end
+  def show; end
+  def create; end
+  def update; end
+  def destroy; end
+
+  private
+
+  def resource
+    @resource ||= Post.find(params[:id])
+  end
+end
+```
 
 ## Contribute
 

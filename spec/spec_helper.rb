@@ -23,31 +23,12 @@ RSpec.configure do |config|
     load 'support/models.rb'
   end
 
+  config.include MockControllerTestHelpers, type: :controller
+
   config.around(:each) do |example|
     ActiveRecord::Base.transaction do
       example.run
       raise ActiveRecord::Rollback
     end
-  end
-end
-
-# TODO research why I need to patch these to work with default behavior?
-class FalseClass
-  def false?
-    true
-  end
-
-  def true?
-    false
-  end
-end
-
-class TrueClass
-  def false?
-    false
-  end
-
-  def true?
-    true
   end
 end

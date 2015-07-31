@@ -60,19 +60,6 @@ module RolePlay
       def model
         RolePlay::Models::Acl.find_by(name: @name)
       end
-
-      private
-
-      def sync_roles(roles, model_roles)
-        roles.each do |role|
-          role.sync_model acl.roles
-        end
-        model_roles.each do |model_role|
-          found_role = roles.select { |role| role.name == model_role.name }.first
-
-          model_role.destroy if found_role.nil?
-        end
-      end
     end
 
     class RoleParser

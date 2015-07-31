@@ -3,7 +3,8 @@ require 'spec_helper'
 describe RolePlay::Subject do
   before(:each) do
     stub_const('Rails', double(root: double))
-    allow(Rails.root).to receive(:join).and_return('spec/support/acls/subject_acl.rb')
+    allow(Rails.root).to receive(:join)
+      .and_return('spec/support/acls/subject_acl.rb')
     RolePlay::Parser.parse!
   end
 
@@ -32,6 +33,26 @@ describe RolePlay::Subject do
     it 'can\'t set a role that does not exist' do
       expect do
         subject.role! :foo, resource
+      end.to raise_error ActiveRecord::RecordNotFound
+    end
+  end
+
+  describe '#unrole!' do
+    it 'unsets a role' do
+      subject.role! :editor, resource
+      expect(subject).to have_role(:editor, resource)
+      subject.unrole! :editor, resource
+      expect(subject).not_to have_role(:editor, resource)
+    end
+
+    it 'unsets also a role you don\'t have' do
+      expect(subject).not_to have_role(:editor, resource)
+      subject.unrole! :editor, resource
+    end
+
+    it 'can\'t unset a role that does not exist' do
+      expect do
+        subject.unrole! :foo, resource
       end.to raise_error ActiveRecord::RecordNotFound
     end
   end

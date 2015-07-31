@@ -24,14 +24,14 @@ describe RolePlay::Resource do
       expect(Post.where_user_can(nil, :read)).to include(subject)
       expect(Post.where_user_can(nil, :create)).not_to include(subject)
       expect(Post.where_user_can(nil, :write)).not_to include(subject)
-      expect(Post.where_user_can(nil, :delete)).not_to include(subject)
+      expect(Post.where_user_can(nil, :destroy)).not_to include(subject)
     end
 
     it 'selector for logged user' do
       expect(Post.where_user_can(user, :read)).to include(subject)
       expect(Post.where_user_can(user, :create)).to include(subject)
       expect(Post.where_user_can(user, :write)).not_to include(subject)
-      expect(Post.where_user_can(user, :delete)).not_to include(subject)
+      expect(Post.where_user_can(user, :destroy)).not_to include(subject)
     end
 
     it 'selector for editor' do
@@ -39,7 +39,7 @@ describe RolePlay::Resource do
       expect(Post.where_user_can(user, :read)).to include(subject)
       expect(Post.where_user_can(user, :create)).to include(subject)
       expect(Post.where_user_can(user, :write)).to include(subject)
-      expect(Post.where_user_can(user, :delete)).not_to include(subject)
+      expect(Post.where_user_can(user, :destroy)).not_to include(subject)
     end
 
     it 'selector for admin' do
@@ -47,7 +47,7 @@ describe RolePlay::Resource do
       expect(Post.where_user_can(user, :read)).to include(subject)
       expect(Post.where_user_can(user, :create)).to include(subject)
       expect(Post.where_user_can(user, :write)).to include(subject)
-      expect(Post.where_user_can(user, :delete)).to include(subject)
+      expect(Post.where_user_can(user, :destroy)).to include(subject)
       expect(Post.where_user_can(user, :foo)).not_to include(subject)
     end
   end
