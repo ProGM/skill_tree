@@ -32,10 +32,6 @@ module RolePlay
           acl || current_acl[:all]
         end
       end
-
-      def current_acl
-        self.class.current_acl
-      end
     end
 
     module ClassMethods

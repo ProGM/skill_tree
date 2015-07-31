@@ -9,7 +9,7 @@ describe RolePlay::Resource do
     RolePlay::Parser.parse!
   end
 
-  let(:current_acl) { RolePlay::Models::Acl.find_by(name: 'posts') }
+  let(:private_acl) { RolePlay::Models::Acl.find_by(name: 'private_post') }
   let(:user) { User.create! }
 
   subject { Post.create! }
@@ -17,6 +17,20 @@ describe RolePlay::Resource do
   it 'has a default acl' do
     expect(subject.acl).not_to be_nil
     expect(subject.acls.first).to eq(subject.acl)
+  end
+
+  it 'can\'t assign a new acl' do
+    expect do
+      subject.update(acl: private_acl)
+    end.to raise_error RolePlay::AclAlreadySet
+  end
+
+  it 'can change his acl, resetting all roles' do
+    user.role! :admin, subject
+    expect(user).to be_allowed_to :read, subject
+    subject.acl!(private_acl)
+    expect(user).not_to have_role :admin, subject
+    expect(user).not_to be_allowed_to :read, subject
   end
 
   describe '#where_user_can' do
