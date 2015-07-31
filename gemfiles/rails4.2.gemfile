@@ -13,4 +13,6 @@ gem 'railties'
 gem 'rspec'
 gem 'rails', '~> 4.2.0'
 
-gemspec :path => '../'
+gem 'codeclimate-test-reporter', group: :test, require: nil
+
+gemspec path: '../'
