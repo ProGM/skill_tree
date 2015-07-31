@@ -4,6 +4,8 @@ require 'action_controller'
 require 'role_play'
 require 'rspec'
 require 'rspec/collection_matchers'
+require 'codeclimate-test-reporter'
+CodeClimate::TestReporter.start
 
 I18n.enforce_available_locales = false
 
