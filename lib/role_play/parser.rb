@@ -53,7 +53,7 @@ module RolePlay
 
       def sync_model
         acl = RolePlay::Models::Acl.find_or_initialize_by(name: @name)
-        @roles.each { |role| role.sync_model acl.roles }
+        @roles.each { |role| role.sync_model acl }
         acl.save!
       end
 
@@ -80,21 +80,39 @@ module RolePlay
         @permissions += element.permissions
       end
 
-      def sync_model(current_roles)
-        model_role = current_roles.find_or_initialize_by(name: @name)
-        sync_permissions model_role.permissions
-        model_role.save!
+      def sync_model(acl)
+        role = RolePlay::Models::Role.find_or_initialize_by(name: @name)
+        role.save!
+        sync_permissions(acl, role)
       end
 
       private
 
-      def sync_permissions(model_permissions)
-        permission_names = @permissions.map(&:to_s)
-        permission_names.each do |permission|
-          model_role = model_permissions.find_or_initialize_by(name: permission)
-          model_role.save!
+      def sync_permissions(acl, role)
+        permission_models = create_permissions!
+        permission_models.each do |permission|
+          RolePlay::Models::AclMapping.find_or_initialize_by(
+            role: role,
+            acl: acl,
+            permission: permission
+          ).save!
         end
-        model_permissions.where.not(name: permission_names).destroy_all
+        purge_old! acl, role, permission_models
+      end
+
+      def create_permissions!
+        @permissions.map do |name|
+          model = RolePlay::Models::Permission.find_or_initialize_by(name: name)
+          model.save!
+          model
+        end
+      end
+
+      def purge_old!(acl, role, permissions)
+        RolePlay::Models::AclMapping.where(
+          role: role,
+          acl: acl
+        ).where.not(permission: permissions).destroy_all
       end
     end
   end

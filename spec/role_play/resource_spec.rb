@@ -25,12 +25,22 @@ describe RolePlay::Resource do
     end.to raise_error RolePlay::AclAlreadySet
   end
 
+  it '#default_permission?' do
+    expect(subject).to have_default_permission(:read)
+    expect(subject).to have_default_permission(:create)
+    expect(subject).not_to have_default_permission(:write)
+    expect(subject).to have_default_permission(:read, :guest)
+    expect(subject).not_to have_default_permission(:create, :guest)
+  end
+
   it 'can change his acl, resetting all roles' do
-    user.role! :admin, subject
-    expect(user).to be_allowed_to :read, subject
-    subject.acl!(private_acl)
-    expect(user).not_to have_role :admin, subject
-    expect(user).not_to be_allowed_to :read, subject
+    user.role! :editor, subject
+    expect(user).to be_allowed_to :write, subject
+    expect(user).not_to be_allowed_to :update, subject
+    subject.acl! private_acl
+    expect(user).to have_role :editor, subject
+    expect(user).to be_allowed_to :update, subject
+    expect(user).not_to be_allowed_to :destroy, subject
   end
 
   describe '#where_user_can' do

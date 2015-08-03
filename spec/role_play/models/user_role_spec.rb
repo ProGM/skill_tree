@@ -4,10 +4,7 @@ describe RolePlay::Models::UserRole do
   it 'users can\'t have duplicate roles for the same resource' do
     user = User.create!
     resource = Post.create!
-
-    acl = RolePlay::Models::Acl.create!(name: 'aaa')
-
-    role = RolePlay::Models::Role.create!(name: 'name', acl: acl)
+    role = RolePlay::Models::Role.create!(name: 'name')
 
     described_class.create!(role: role, user: user, resource: resource)
 

@@ -1,4 +1,4 @@
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(version: 0) do
   create_table :users do |t|
     t.string :name
   end
@@ -12,19 +12,29 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 
   create_table :roles do |t|
-    t.string :name, null: false
-    t.references :acl, null: false
-    t.timestamps
+    t.string :name, unique: true, null: false
   end
-  # Only one duplicate-name role per acl
-  add_index :roles, [:name, :acl_id], unique: true
+
+  create_table :permissions do |t|
+    t.string :name, unique: true, null: false
+  end
+
+  create_table :acl_mappings do |t|
+    t.references :acl, null: false
+    t.references :role, null: false
+    t.references :permission, null: true
+
+    t.timestamps null: false
+  end
+
+  add_index :acl_mappings, [:acl_id, :role_id, :permission_id], unique: true
 
   create_table :user_roles do |t|
     t.references :user
     t.references :role, null: false
     t.references :resource, polymorphic: true
 
-    t.timestamps
+    t.timestamps null: false
   end
   add_index :user_roles, [:resource_type, :resource_id]
   # Only can't be admin of a resource multiple times
@@ -37,11 +47,4 @@ ActiveRecord::Schema.define(:version => 0) do
   end
   # There can be only one-to-many relationship with a resource
   add_index :acl_ownerships, [:resource_type, :resource_id], unique: true
-
-  create_table :permissions do |t|
-    t.string :name, null: false
-    t.references :role
-  end
-
-  add_index :permissions, [:name, :role_id], unique: true
 end

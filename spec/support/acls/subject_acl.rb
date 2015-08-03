@@ -28,11 +28,11 @@ acl :private_post do |a|
 
   a.role :editor do |r|
     r.inherit :user
-    r.can :read, :write
+    r.can :read, :write, :update
   end
 
   a.role :admin do |r|
     r.inherit :editor
-    r.can :update, :destroy
+    r.can :destroy
   end
 end

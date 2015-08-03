@@ -36,8 +36,9 @@ module RolePlay
     private
 
     def permitted_with_role?(action, resource)
-      user_roles.joins(role: :permissions)
-        .where(permissions: { name:  action.to_s })
+      user_roles.joins(role: { acl_mappings: [:permission, :acl] })
+        .where(permissions: { name: action })
+        .where(acls: { id: resource.acl })
         .where(resource: resource).any?
     end
   end

@@ -19,6 +19,6 @@ acl :desks do |a|
 
   a.role :master do |r|
     r.inherit :admin
-    r.can :delete
+    r.can :destroy
   end
 end

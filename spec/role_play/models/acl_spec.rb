@@ -18,6 +18,12 @@ describe RolePlay::Models::Acl do
     expect(subject.roles.model.name).to eq('RolePlay::Models::Role')
   end
 
+  it 'has many acl_mappings' do
+    expect(subject).to be_respond_to(:acl_mappings)
+    expect(subject.acl_mappings.model.name).to eq(
+      'RolePlay::Models::AclMapping')
+  end
+
   it 'has many acl_ownerships' do
     expect(subject).to be_respond_to(:acl_ownerships)
     expect(subject.acl_ownerships.model.name).to eq(

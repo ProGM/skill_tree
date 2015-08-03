@@ -18,13 +18,14 @@ module RolePlay
         end
       }
 
-      scope :with_permissions, -> { joins(acls: { roles: :permissions }) }
+      scope :with_permissions, lambda {
+        joins(acls: { acl_mappings: [:permission, :role] })
+      }
 
       scope :where_guest_can, lambda { |action|
         with_permissions
           .where(permissions: { name: action.to_s })
           .where(roles: { name: 'guest' })
-          .uniq
       }
 
       scope :where_logged_user_can, lambda { |action, user_id|
@@ -60,16 +61,17 @@ module RolePlay
 
     def acl!(value)
       ActiveRecord::Base.transaction do
-        user_roles.destroy_all
         acl_ownerships.destroy_all
         acl_ownerships.create!(acl: value)
       end if value != acl
     end
 
     def default_permission?(action, role = :user)
-      acls.joins(roles: :permissions)
+      acls.joins(acl_mappings: [:permission, :role])
         .where(permissions: { name: action })
         .where(roles: { name: role }).any?
     end
+
+    alias_method :has_default_permission?, :default_permission?
   end
 end
