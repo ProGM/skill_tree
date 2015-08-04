@@ -37,7 +37,7 @@ module SkillTree
 
     def permitted_with_role?(action, resource)
       user_roles.joins(role: { acl_mappings: [:permission, :acl] })
-        .where(permissions: { name: action })
+        .where(permissions: { name: action.to_s })
         .where(acls: { id: resource.acl })
         .where(resource: resource).any?
     end
