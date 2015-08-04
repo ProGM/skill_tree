@@ -18,8 +18,8 @@ module SkillTree
 
       scope :where_guest_can, lambda { |action|
         with_permissions
-          .where(permissions: { name: action.to_s })
-          .where(roles: { name: 'guest' })
+          .where('"permissions"."name" = ?', action.to_s)
+          .where('"roles"."name" = ?', 'guest')
       }
 
       scope :where_logged_user_can, lambda { |action, user_id|
@@ -27,7 +27,7 @@ module SkillTree
           .joins("LEFT OUTER JOIN \"user_roles\""\
             "ON \"user_roles\".\"resource_id\" = \"#{table_name}\".\"id\""\
             "AND \"user_roles\".\"resource_type\" = '#{name}'")
-          .where(permissions: { name: action.to_s })
+          .where('"permissions"."name" = ?', action.to_s)
           .where('"user_roles"."id" IS NULL '\
             ' OR "user_roles"."role_id" = "roles"."id"')
           .where('("user_roles"."user_id" IS NULL AND "roles"."name" = ?)' \
@@ -59,8 +59,8 @@ module SkillTree
 
     def default_permission?(action, role = :user)
       acls.joins(acl_mappings: [:permission, :role])
-        .where(permissions: { name: action.to_s })
-        .where(roles: { name: role.to_s }).any?
+        .where('"permissions"."name" = ?', action.to_s)
+        .where('"roles"."name" = ?', role.to_s).any?
     end
 
     alias_method :has_default_permission?, :default_permission?
