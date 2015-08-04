@@ -15,7 +15,7 @@ describe SkillTree::InstallGenerator, type: :generator do
       directory 'config' do
         directory 'initializers' do
           file 'skill_tree.rb' do
-            contains 'SkillTree::Parser.parse!'
+            contains 'SkillTree.init!'
           end
         end
         file 'acl.rb' do

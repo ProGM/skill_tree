@@ -5,7 +5,7 @@ describe SkillTree::Subject do
     stub_const('Rails', double(root: double))
     allow(Rails.root).to receive(:join)
       .and_return('spec/support/acls/subject_acl.rb')
-    SkillTree::Parser.parse!
+    SkillTree::Parser::Initializer.parse!
   end
 
   let(:current_acl) { SkillTree::Models::Acl.find_by(name: 'posts') }

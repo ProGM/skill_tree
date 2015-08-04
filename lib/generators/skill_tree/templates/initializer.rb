@@ -1,1 +1,1 @@
-SkillTree::Parser.parse!
+SkillTree.init!

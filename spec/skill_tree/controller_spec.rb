@@ -5,7 +5,7 @@ describe TestController, type: :controller do
     stub_const('Rails', double(root: double))
     allow(Rails.root).to receive(:join)
       .and_return('spec/support/acls/subject_acl.rb')
-    SkillTree::Parser.parse!
+    SkillTree::Parser::Initializer.parse!
   end
 
   let(:user) { User.create! }

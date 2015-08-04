@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SkillTree::Parser do
+describe SkillTree::Parser::Initializer do
   before(:each) do
     stub_const('Rails', double(root: double))
     allow(Rails.root).to receive(:join) { |param| param }
@@ -8,7 +8,7 @@ describe SkillTree::Parser do
 
   describe '#parse!' do
     it 'calls setup' do
-      expect_any_instance_of(SkillTree::Parser).to receive(:setup)
+      expect_any_instance_of(described_class).to receive(:setup)
       described_class.parse!
     end
   end

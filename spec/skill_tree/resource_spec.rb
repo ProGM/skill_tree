@@ -6,7 +6,7 @@ describe SkillTree::Resource do
     allow(Rails.root).to receive(:join)
       .and_return('spec/support/acls/subject_acl.rb')
 
-    SkillTree::Parser.parse!
+    SkillTree::Parser::Initializer.parse!
   end
 
   let(:private_acl) { SkillTree::Models::Acl.find_by(name: 'private_post') }

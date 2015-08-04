@@ -3,13 +3,7 @@ module SkillTree
     extend ActiveSupport::Concern
 
     included do
-      has_many :acl_ownerships,
-               as: :resource, class_name: 'SkillTree::Models::AclOwnership'
-      has_many :acls,
-               through: :acl_ownerships, class_name: 'SkillTree::Models::Acl'
-      has_many :roles, through: :acls, class_name: 'SkillTree::Models::Role'
-      has_many :user_roles, as: :resource,
-                            class_name: 'SkillTree::Models::UserRole'
+      include Relations
       scope :where_user_can, lambda { |user, action|
         if user
           where_logged_user_can(action, user.id)
@@ -40,10 +34,7 @@ module SkillTree
             ' OR ("user_roles"."user_id" = ?)', 'user', user_id)
           .uniq
       }
-
-      before_save do |model|
-        model.acl = SkillTree::Parser.default_acl_for(model) unless model.acl
-      end
+      include Callbacks
     end
 
     def acl
@@ -73,5 +64,29 @@ module SkillTree
     end
 
     alias_method :has_default_permission?, :default_permission?
+
+    module Relations
+      def self.included(base)
+        base.has_many :acl_ownerships,
+                      as: :resource,
+                      class_name: 'SkillTree::Models::AclOwnership'
+        base.has_many :acls,
+                      through: :acl_ownerships,
+                      class_name: 'SkillTree::Models::Acl'
+        base.has_many :roles, through: :acls,
+                              class_name: 'SkillTree::Models::Role'
+        base.has_many :user_roles,
+                      as: :resource, class_name: 'SkillTree::Models::UserRole'
+      end
+    end
+
+    module Callbacks
+      def self.included(base)
+        base.before_save do |model|
+          model.acl = SkillTree::Parser::Initializer
+            .default_acl_for(model) unless model.acl
+        end
+      end
+    end
   end
 end
