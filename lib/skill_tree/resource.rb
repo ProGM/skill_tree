@@ -59,8 +59,8 @@ module SkillTree
 
     def default_permission?(action, role = :user)
       acls.joins(acl_mappings: [:permission, :role])
-        .where(permissions: { name: action })
-        .where(roles: { name: role }).any?
+        .where(permissions: { name: action.to_s })
+        .where(roles: { name: role.to_s }).any?
     end
 
     alias_method :has_default_permission?, :default_permission?

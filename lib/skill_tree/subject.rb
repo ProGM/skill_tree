@@ -13,10 +13,10 @@ module SkillTree
     end
     alias_method :allowed_to?, :can?
 
-    def role?(role_name, myresource)
+    def role?(role_name, resource)
       user_roles.joins(:role)
-        .where(roles: { name: role_name })
-        .where(resource: myresource).any?
+        .where(roles: { name: role_name.to_s })
+        .where(resource: resource).any?
     end
 
     def role!(role, resource)
