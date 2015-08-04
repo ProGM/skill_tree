@@ -28,7 +28,7 @@ class MockController
 end
 
 class TestController < MockController
-  include RolePlay::Controller
+  include SkillTree::Controller
 
   allow(:all) { true }
   allow(:index, :show) { false }

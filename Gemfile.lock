@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    role_play (0.0.1)
+    skill_tree (0.0.1)
       actionpack (~> 4, < 5)
       activerecord (~> 4, < 5)
       activesupport (~> 4, < 5)
@@ -137,7 +137,7 @@ DEPENDENCIES
   jdbc-sqlite3
   rails (~> 4.2.0)
   rake (~> 10.4)
-  role_play!
   rspec (~> 3)
   rspec-collection_matchers
+  skill_tree!
   sqlite3 (~> 1.3.10)

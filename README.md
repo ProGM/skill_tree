@@ -1,25 +1,25 @@
-[![Build Status](https://travis-ci.org/ProGM/role_play.svg)](https://travis-ci.org/ProGM/role_play)
-[![Code Climate](https://codeclimate.com/github/ProGM/role_play/badges/gpa.svg)](https://codeclimate.com/github/ProGM/role_play)
-[![Test Coverage](https://codeclimate.com/github/ProGM/role_play/badges/coverage.svg)](https://codeclimate.com/github/ProGM/role_play/coverage)
+[![Build Status](https://travis-ci.org/ProGM/skill_tree.svg)](https://travis-ci.org/ProGM/skill_tree)
+[![Code Climate](https://codeclimate.com/github/ProGM/skill_tree/badges/gpa.svg)](https://codeclimate.com/github/ProGM/skill_tree)
+[![Test Coverage](https://codeclimate.com/github/ProGM/skill_tree/badges/coverage.svg)](https://codeclimate.com/github/ProGM/skill_tree/coverage)
 
 # Role Play
 A resource-based ACL system for Rails.
 
 ## Getting started
 
-RolePlay is tested on Rails 4.1+, but should run also on previous versions.
+SkillTree is tested on Rails 4.1+, but should run also on previous versions.
 You can add it to your Gemfile with:
 
 ```ruby
-gem 'role_play'
+gem 'skill_tree'
 ```
 
 Run the bundle command to install it.
 
-After you install RolePlay and add it to your Gemfile, you need to run the generator:
+After you install SkillTree and add it to your Gemfile, you need to run the generator:
 
 ```console
-rails generate role_play:install
+rails generate skill_tree:install
 ```
 
 And finally run:
@@ -31,7 +31,7 @@ rake db:migrate
 To run new migrations.
 
 ## Configuration
-RolePlay requires at least two models, a **Subject** and a **Resource**.
+SkillTree requires at least two models, a **Subject** and a **Resource**.
 The **Subject** is who could have a role, a **Resource** is who has an acl.
 
 For example we could have a **User** and a **Post**
@@ -40,12 +40,12 @@ Let's setup them:
 
 ```ruby
 class User < ActiveRecord::Base
-  include RolePlay::Subject
+  include SkillTree::Subject
   ...
 end
 
 class Post < ActiveRecord::Base
-  include RolePlay::Resource
+  include SkillTree::Resource
   ...
 end
 ```
@@ -163,13 +163,13 @@ Post.where_user_can(user, :read)
 
 ## Controller methods
 
-First of all, let's include RolePlay in ApplicationController
+First of all, let's include SkillTree in ApplicationController
 
 ```ruby
-  include RolePlay::Controller
+  include SkillTree::Controller
 ```
 
-As a default behaviour, RolePlay negates access to **any** action of **any** controller (security by default).
+As a default behaviour, SkillTree negates access to **any** action of **any** controller (security by default).
 
 You can use the `allow` method to decide which action allow to be accessed.
 
@@ -204,4 +204,4 @@ end
 5. Create new Pull Request
 
 ##License
-See [LICENSE](https://github.com/ProGM/role_play/blob/master/LICENSE)
+See [LICENSE](https://github.com/ProGM/skill_tree/blob/master/LICENSE)

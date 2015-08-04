@@ -11,7 +11,7 @@ capybara-*.html
 **.orig
 rerun.txt
 pickle-email-*.html
-/spec/role_play/tmp/
+/spec/skill_tree/tmp/
 
 *.sublime-*
 .ruby-version
