@@ -1,16 +1,19 @@
 class CreateSkillTreeAclSystem < ActiveRecord::Migration
   def change
     create_table :acls do |t|
-      t.string :name, unique: true, null: false
+      t.string :name, null: false
     end
+    add_index :acls, :name, unique: true
 
     create_table :roles do |t|
-      t.string :name, unique: true, null: false
+      t.string :name, null: false
     end
+    add_index :roles, :name, unique: true
 
     create_table :permissions do |t|
-      t.string :name, unique: true, null: false
+      t.string :name, null: false
     end
+    add_index :permissions, :name, unique: true
 
     create_table :acl_mappings do |t|
       t.references :acl, null: false
