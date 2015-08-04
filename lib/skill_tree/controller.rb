@@ -25,7 +25,7 @@ module SkillTree
       end
 
       def can_access?
-        acl = current_acl[action_name]
+        acl = current_acl[action_name.to_sym]
         if acl.respond_to? :call
           instance_eval(&acl)
         else
