@@ -4,8 +4,10 @@ require 'active_support'
 require 'active_record'
 require 'action_controller'
 require 'role_play'
+require 'generators/role_play/install_generator'
 require 'rspec'
 require 'rspec/collection_matchers'
+require 'generator_spec'
 
 I18n.enforce_available_locales = false
 

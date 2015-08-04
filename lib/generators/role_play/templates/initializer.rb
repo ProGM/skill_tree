@@ -1,0 +1,1 @@
+RolePlay::Parser.parse!

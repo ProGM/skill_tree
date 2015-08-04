@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 10.4'
   s.add_development_dependency 'rspec', '~> 3'
+  s.add_development_dependency 'generator_spec'
   s.add_development_dependency 'rspec-collection_matchers'
 end
