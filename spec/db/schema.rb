@@ -9,6 +9,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table :acls do |t|
     t.string :name, null: false
+    t.integer :version, null: false
   end
   add_index :acls, :name, unique: true
 

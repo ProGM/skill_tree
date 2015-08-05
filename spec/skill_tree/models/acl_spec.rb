@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SkillTree::Models::Acl do
+describe SkillTree::Models::Acl, type: :model do
   it 'validates name presence' do
     expect(subject).to have(1).error_on(:name)
     subject.name = 'my_name'
@@ -8,7 +8,7 @@ describe SkillTree::Models::Acl do
   end
 
   it 'validates name uniqueness' do
-    described_class.create!(name: 'my_name')
+    create(:acl, name: 'my_name', version: 0)
     subject.name = 'my_name'
     expect(subject).to have(1).error_on(:name)
   end

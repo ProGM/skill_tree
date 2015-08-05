@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe SkillTree::Models::AclOwnership do
+describe SkillTree::Models::AclOwnership, type: :model do
   it 'belongs to an acl' do
     expect(subject).to be_respond_to(:acl)
   end
 
   it 'validates presence of acl' do
     expect(subject).to have(1).error_on(:acl)
-    subject.acl = SkillTree::Models::Acl.new
+    subject.acl = build(:acl)
     expect(subject).to have(0).error_on(:acl)
   end
 
@@ -22,7 +22,7 @@ describe SkillTree::Models::AclOwnership do
 
   it 'resource is unique' do
     resource = Post.create!
-    acl = SkillTree::Models::Acl.create!(name: 'some_name')
+    acl = create(:acl, name: 'some_name', version: 0)
     described_class.create!(resource: resource, acl: acl)
     subject.resource = User.new
     subject.resource = Post.new

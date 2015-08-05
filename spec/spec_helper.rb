@@ -26,6 +26,7 @@ RSpec.configure do |config|
   end
 
   config.include MockControllerTestHelpers, type: :controller
+  config.include ModelBuilder, type: :model
 
   config.around(:each) do |example|
     ActiveRecord::Base.transaction do

@@ -7,6 +7,7 @@ module SkillTree
       has_many :roles, -> { uniq }, through: :acl_mappings
 
       validates :name, presence: true, uniqueness: true
+      validates :version, presence: true
     end
   end
 end

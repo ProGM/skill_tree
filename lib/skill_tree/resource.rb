@@ -83,8 +83,10 @@ module SkillTree
     module Callbacks
       def self.included(base)
         base.before_save do |model|
-          model.acl = SkillTree::Parser::Initializer
-            .default_acl_for(model) unless model.acl
+          unless model.acl
+            acl = SkillTree::Parser::Initializer.default_acl_for(model)
+            model.acl = acl if acl
+          end
         end
       end
     end

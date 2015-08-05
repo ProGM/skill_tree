@@ -19,6 +19,13 @@ describe SkillTree::Resource do
     expect(subject.acls.first).to eq(subject.acl)
   end
 
+  it 'assigns no acl if there\'s none' do
+    allow(SkillTree::Parser::Initializer).to receive(:default_acl_for)
+      .and_return(nil)
+    expect(subject.acl).to be_nil
+    expect(subject.acl_ownerships).to be_empty
+  end
+
   it 'can\'t assign a new acl' do
     expect do
       subject.update(acl: private_acl)
