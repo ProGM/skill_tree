@@ -26,10 +26,11 @@ module SkillTree
 
       def can_access?
         acl = current_acl[action_name.to_sym]
+        default = current_acl[:all]
         if acl.respond_to? :call
           instance_eval(&acl)
-        else
-          acl || current_acl[:all]
+        elsif default.respond_to? :call
+          instance_eval(&default)
         end
       end
     end

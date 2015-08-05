@@ -68,3 +68,30 @@ describe TestController, type: :controller do
     end
   end
 end
+
+describe Test2Controller, type: :controller do
+  before(:each) do
+    stub_const('Rails', double(root: double))
+    allow(Rails.root).to receive(:join)
+      .and_return('spec/support/acls/subject_acl.rb')
+    SkillTree::Parser::Initializer.parse!
+  end
+
+  let(:user) { User.create! }
+  let!(:resource) { Post.create! }
+
+  describe '#index' do
+    it 'returns error if the user is not logged in' do
+      expect_any_instance_of(Test2Controller).not_to receive(:index)
+      expect { get :index }.to raise_error ActionController::RoutingError
+    end
+
+    it 'works only when user is logged in' do
+      allow_any_instance_of(Test2Controller).to receive(:current_user)
+        .and_return(user)
+
+      expect_any_instance_of(Test2Controller).to receive(:index)
+      get :index
+    end
+  end
+end

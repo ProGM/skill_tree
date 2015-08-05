@@ -25,6 +25,9 @@ class MockController
     send(self.class.before_filters[:all]) if self.class.before_filters[:all]
     send(action)
   end
+
+  def current_user
+  end
 end
 
 class TestController < MockController
@@ -55,7 +58,12 @@ class TestController < MockController
   def post
     @post ||= Post.first
   end
+end
 
-  def current_user
+class Test2Controller < MockController
+  include SkillTree::Controller
+  allow(:all) { current_user }
+
+  def show
   end
 end
