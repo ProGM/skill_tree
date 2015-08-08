@@ -7,6 +7,11 @@ ActiveRecord::Schema.define(version: 0) do
     t.string :text
   end
 
+  create_table :post_with_authors do |t|
+    t.string :text
+    t.references :user
+  end
+
   create_table :acls do |t|
     t.string :name, null: false
     t.integer :version, null: false

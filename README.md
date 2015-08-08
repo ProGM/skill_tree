@@ -40,12 +40,22 @@ Let's setup them:
 
 ```ruby
 class User < ActiveRecord::Base
-  include SkillTree::Subject
+  as_skill_tree_subject
   ...
 end
 
 class Post < ActiveRecord::Base
-  include SkillTree::Resource
+  as_skill_tree_resource
+  ...
+end
+```
+
+You can also define a default admin role for that post. Example:
+
+```ruby
+class Post < ActiveRecord::Base
+  belongs_to :user
+  as_skill_tree_resource admin: :user
   ...
 end
 ```
@@ -115,6 +125,20 @@ And you can change it:
 post = Post.first
 post.acl = Acl.find_by_name('private_post')
 post.save!
+```
+
+As default behaviour, the acl are updated each time you startup your application.
+
+To avoid this, you can add a version number to your acl, so it'll be updated only where the version number changes.
+
+```ruby
+acl :post, version: 1 do |a|
+  ...
+end
+
+acl :post2, version: 3 do |a|
+  ...
+end
 ```
 
 ## Model methods

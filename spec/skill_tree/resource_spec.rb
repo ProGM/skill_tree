@@ -26,6 +26,13 @@ describe SkillTree::Resource do
     expect(subject.acl_ownerships).to be_empty
   end
 
+  it 'sets up admin automatically if defined' do
+    expect do
+      subject = PostWithAuthor.create!(user: user)
+      expect(user).to have_role :admin, subject
+    end.to change(SkillTree::Models::UserRole, :count).by(1)
+  end
+
   it 'can\'t assign a new acl' do
     expect do
       subject.update(acl: private_acl)

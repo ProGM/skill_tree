@@ -36,3 +36,22 @@ acl :private_post do |a|
     r.can :destroy
   end
 end
+
+acl :other_post, default_for: :post_with_authors do |a|
+  a.role :guest do
+  end
+
+  a.role :user do |r|
+    r.can :create
+  end
+
+  a.role :editor do |r|
+    r.inherit :user
+    r.can :read, :write, :update
+  end
+
+  a.role :admin do |r|
+    r.inherit :editor
+    r.can :destroy
+  end
+end
