@@ -15,10 +15,11 @@ module SkillTree
       end
 
       def acl!(value)
+        new_acl = parse_acl(value)
         ActiveRecord::Base.transaction do
           acl_ownerships.destroy_all
-          acl_ownerships.create!(acl: value)
-        end if value != acl
+          acl_ownerships.create!(acl: new_acl)
+        end if new_acl != acl
       end
 
       def default_permission?(action, role = :user)
@@ -28,6 +29,16 @@ module SkillTree
       end
 
       alias_method :has_default_permission?, :default_permission?
+
+      private
+
+      def parse_acl(value)
+        if value.is_a? ActiveRecord::Base
+          value
+        else
+          SkillTree::Models::Acl.find_by!(name: value.to_s)
+        end
+      end
     end
   end
 end

@@ -47,14 +47,21 @@ describe SkillTree::Resource do
     expect(subject).not_to have_default_permission(:create, :guest)
   end
 
-  it 'can change his acl, resetting all roles' do
-    user.role! :editor, subject
-    expect(user).to be_allowed_to :write, subject
-    expect(user).not_to be_allowed_to :update, subject
-    subject.acl! private_acl
-    expect(user).to have_role :editor, subject
-    expect(user).to be_allowed_to :update, subject
-    expect(user).not_to be_allowed_to :destroy, subject
+  describe '#acl!' do
+    it 'can change his acl, keeping all roles' do
+      user.role! :editor, subject
+      expect(user).to be_allowed_to :write, subject
+      expect(user).not_to be_allowed_to :update, subject
+      subject.acl! private_acl
+      expect(user).to have_role :editor, subject
+      expect(user).to be_allowed_to :update, subject
+      expect(user).not_to be_allowed_to :destroy, subject
+    end
+
+    it 'accepts both symbols and strings' do
+      subject.acl! :private_post
+      subject.acl! 'private_post'
+    end
   end
 
   describe '#where_user_can' do

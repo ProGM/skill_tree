@@ -185,6 +185,13 @@ user.role? :admin, resource # => false
 Post.where_user_can(user, :read)
 ```
 
+### Change a resource acl
+
+```ruby
+resource.acl! :private_post
+```
+
+
 ## Controller methods
 
 First of all, let's include SkillTree in ApplicationController
