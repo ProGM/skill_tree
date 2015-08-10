@@ -227,6 +227,30 @@ class MyController < ApplicationController
 end
 ```
 
+You can use the keyword `:all` to specify the default behaviour for all actions.
+
+```ruby
+class MyController < ApplicationController
+  allow(:all) { !current_user.nil? }
+
+  ...
+end
+```
+
+### Authorization errors handling
+
+When an `allow(...) {}` block returns false, SkillTree::NotAuthorizedError is raised.
+
+You can capture it in your application controller and define a default behaviour.
+
+```ruby
+class ApplicationController < ActionController::Base
+  rescue_from SkillTree::NotAuthorizedError do
+    raise ActionController::RoutingError # This will raise a 404 error
+  end
+end
+```
+
 ##Contributing
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)

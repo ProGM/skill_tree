@@ -21,24 +21,32 @@ module SkillTree
       private
 
       def check_allow_filter!
-        fail ActionController::RoutingError, 'Not Found' unless can_access?
+        fail SkillTree::NotAuthorizedError unless can_access?
       end
 
       def can_access?
         acl = current_acl[action_name.to_sym]
-        default = current_acl[:all]
         if acl.respond_to? :call
           instance_eval(&acl)
-        elsif default.respond_to? :call
-          instance_eval(&default)
+        elsif default_acl.respond_to? :call
+          instance_eval(&default_acl)
         end
+      end
+
+      private
+
+      def default_acl
+        current_acl[:all]
+      end
+
+      def current_acl
+        self.class.current_acl
       end
     end
 
     module ClassMethods
-      def self.extended(base)
-        base.send :cattr_accessor, :current_acl
-        base.send :class_variable_set, :@@current_acl, {}
+      def current_acl
+        @current_acl ||= {}
       end
 
       def allow(*args, &block)

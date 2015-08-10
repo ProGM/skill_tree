@@ -1,6 +1,3 @@
-class ActionController::RoutingError < StandardError
-end
-
 module MockControllerTestHelpers
   def get(method_name)
     described_class.new.invoke method_name
@@ -14,7 +11,7 @@ class MockController
     end
 
     def before_filters
-      @before_filters ||= {}
+      @@before_filters ||= {}
     end
   end
 
@@ -22,17 +19,23 @@ class MockController
 
   def invoke(action)
     @action_name = action
-    send(self.class.before_filters[:all]) if self.class.before_filters[:all]
+    send(before_filters[:all]) if before_filters[:all]
     send(action)
+  end
+
+  def before_filters
+    self.class.before_filters
   end
 
   def current_user
   end
 end
 
-class TestController < MockController
+class ApplicationController < MockController
   include SkillTree::Controller
+end
 
+class TestController < ApplicationController
   allow(:all) { true }
   allow(:index, :show) { false }
   allow(:create) { can?(:create, post) }
@@ -60,8 +63,7 @@ class TestController < MockController
   end
 end
 
-class Test2Controller < MockController
-  include SkillTree::Controller
+class Test2Controller < ApplicationController
   allow(:all) { current_user }
 
   def show

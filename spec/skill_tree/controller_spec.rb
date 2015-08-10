@@ -20,12 +20,12 @@ describe TestController, type: :controller do
 
   it '#index' do
     expect_any_instance_of(TestController).not_to receive(:update)
-    expect { get :index }.to raise_error ActionController::RoutingError
+    expect { get :index }.to raise_error SkillTree::NotAuthorizedError
   end
 
   it '#show' do
     expect_any_instance_of(TestController).not_to receive(:update)
-    expect { get :index }.to raise_error ActionController::RoutingError
+    expect { get :index }.to raise_error SkillTree::NotAuthorizedError
   end
 
   it '#update' do
@@ -43,7 +43,7 @@ describe TestController, type: :controller do
 
     it 'is blocked for a guest' do
       expect_any_instance_of(TestController).not_to receive(:create)
-      expect { get :create }.to raise_error ActionController::RoutingError
+      expect { get :create }.to raise_error SkillTree::NotAuthorizedError
     end
   end
 
@@ -59,12 +59,12 @@ describe TestController, type: :controller do
       allow_any_instance_of(TestController).to receive(:current_user)
         .and_return(user)
       expect_any_instance_of(TestController).not_to receive(:destroy)
-      expect { get :destroy }.to raise_error ActionController::RoutingError
+      expect { get :destroy }.to raise_error SkillTree::NotAuthorizedError
     end
 
     it 'is blocked for a guest' do
       expect_any_instance_of(TestController).not_to receive(:destroy)
-      expect { get :destroy }.to raise_error ActionController::RoutingError
+      expect { get :destroy }.to raise_error SkillTree::NotAuthorizedError
     end
   end
 end
@@ -83,7 +83,7 @@ describe Test2Controller, type: :controller do
   describe '#index' do
     it 'returns error if the user is not logged in' do
       expect_any_instance_of(Test2Controller).not_to receive(:index)
-      expect { get :index }.to raise_error ActionController::RoutingError
+      expect { get :index }.to raise_error SkillTree::NotAuthorizedError
     end
 
     it 'works only when user is logged in' do
@@ -92,6 +92,12 @@ describe Test2Controller, type: :controller do
 
       expect_any_instance_of(Test2Controller).to receive(:index)
       get :index
+    end
+  end
+
+  describe '#current_acl' do
+    it 'differs between classes with common parent' do
+      expect(TestController.current_acl).not_to eq(Test2Controller.current_acl)
     end
   end
 end
