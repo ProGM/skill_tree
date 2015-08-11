@@ -24,13 +24,12 @@ module SkillTree
         scope :where_logged_user_can, lambda { |action, user_id|
           with_permissions
             .joins("LEFT OUTER JOIN \"user_roles\""\
-              "ON \"user_roles\".\"resource_id\" = \"#{table_name}\".\"id\""\
-              "AND \"user_roles\".\"resource_type\" = '#{name}'")
+              " ON \"user_roles\".\"resource_id\" = \"#{table_name}\".\"id\""\
+              " AND \"user_roles\".\"resource_type\" = '#{name}'")
             .where('"permissions"."name" = ?', action.to_s)
-            .where('"user_roles"."id" IS NULL '\
-              ' OR "user_roles"."role_id" = "roles"."id"')
-            .where('("user_roles"."user_id" IS NULL AND "roles"."name" = ?)' \
-              ' OR ("user_roles"."user_id" = ?)', 'user', user_id)
+            .where('("user_roles"."role_id" = "roles"."id"'\
+                   ' AND "user_roles"."user_id" = ?) OR ("roles"."name" = ?)',
+                   user_id, 'user')
             .uniq
         }
       end

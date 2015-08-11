@@ -11,6 +11,7 @@ describe SkillTree::Resource do
 
   let(:private_acl) { SkillTree::Models::Acl.find_by(name: 'private_post') }
   let(:user) { User.create! }
+  let(:any_user) { User.create! }
 
   subject { Post.create! }
 
@@ -74,13 +75,21 @@ describe SkillTree::Resource do
 
     it 'selector for logged user' do
       expect(Post.where_user_can(user, :read)).to include(subject)
-      expect(Post.where_user_can(user, :create)).to include(subject)
-      expect(Post.where_user_can(user, :write)).not_to include(subject)
-      expect(Post.where_user_can(user, :destroy)).not_to include(subject)
+
+      expect(Post.where_user_can(any_user, :read)).to include(subject)
+      expect(Post.where_user_can(any_user, :read)).to include(subject)
+      expect(Post.where_user_can(any_user, :create)).to include(subject)
+      expect(Post.where_user_can(any_user, :write)).not_to include(subject)
+      expect(Post.where_user_can(any_user, :destroy)).not_to include(subject)
     end
 
     it 'selector for editor' do
       user.role!(:editor, subject)
+
+      # Bug fix
+      expect(Post.where_user_can(any_user, :read)).to include(subject)
+      expect(Post.where_user_can(any_user, :destroy)).not_to include(subject)
+
       expect(Post.where_user_can(user, :read)).to include(subject)
       expect(Post.where_user_can(user, :create)).to include(subject)
       expect(Post.where_user_can(user, :write)).to include(subject)
@@ -89,6 +98,10 @@ describe SkillTree::Resource do
 
     it 'selector for admin' do
       user.role!(:admin, subject)
+      # Bug fix
+      expect(Post.where_user_can(any_user, :read)).to include(subject)
+      expect(Post.where_user_can(any_user, :destroy)).not_to include(subject)
+
       expect(Post.where_user_can(user, :read)).to include(subject)
       expect(Post.where_user_can(user, :create)).to include(subject)
       expect(Post.where_user_can(user, :write)).to include(subject)
