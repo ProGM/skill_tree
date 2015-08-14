@@ -32,7 +32,7 @@ module SkillTree
       end
 
       def unrole!(role, resource)
-        role = resource.roles.find_by_name!(role)
+        role = SkillTree::Models::Role.find_by_name!(role)
         active_roles = user_roles.where(role: role, resource: resource)
         active_roles.destroy_all
       end
