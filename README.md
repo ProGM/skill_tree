@@ -241,12 +241,12 @@ end
 
 When an `allow(...) {}` block returns false, SkillTree::NotAuthorizedError is raised.
 
-You can capture it in your application controller and define a default behaviour.
+You can capture it in your application controller and define a custom behaviour.
 
 ```ruby
 class ApplicationController < ActionController::Base
   rescue_from SkillTree::NotAuthorizedError do
-    raise ActionController::RoutingError # This will raise a 404 error
+    raise ActionController::RoutingError, 'not found' # This will raise a 404 error
   end
 end
 ```

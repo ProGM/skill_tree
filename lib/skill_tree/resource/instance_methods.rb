@@ -22,6 +22,14 @@ module SkillTree
         end if new_acl != acl
       end
 
+      def permissions_for(user)
+        role = SkillTree::Models::Role.find_for(user, self)
+        SkillTree::Models::Permission.joins(
+          acl_mappings: [:role, :acl])
+          .where('("roles"."id" = ?)', role)
+          .where('("acls"."id" = ?)', acl)
+      end
+
       def default_permission?(action, role = :user)
         acls.joins(acl_mappings: [:permission, :role])
           .where('"permissions"."name" = ?', action.to_s)

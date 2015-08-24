@@ -109,4 +109,29 @@ describe SkillTree::Resource do
       expect(Post.where_user_can(user, :foo)).not_to include(subject)
     end
   end
+
+  describe '#permissions_for' do
+    it 'lists all permissions for guests when user is nil' do
+      expect(permissions_for(nil)).to contain_exactly(:read)
+    end
+
+    it 'lists all permissions for an user' do
+      expect(permissions_for(user)).to contain_exactly(:create, :read)
+    end
+
+    it 'lists all permissions for an editor' do
+      user.role! :editor, subject
+      expect(permissions_for(user)).to contain_exactly(:create, :read, :write)
+    end
+
+    it 'lists all permissions for an admin' do
+      user.role! :admin, subject
+      expect(permissions_for(user)).to contain_exactly(
+        :read, :create, :write, :update, :destroy)
+    end
+
+    def permissions_for(user)
+      subject.permissions_for(user).names
+    end
+  end
 end
