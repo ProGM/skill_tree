@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe SkillTree::Models::UserRole, type: :model do
+  it 'has always a role' do
+    subject.role = nil
+    expect(subject).to have(1).error_on(:role)
+    subject.role = SkillTree::Models::Role.new
+    expect(subject).to have(0).error_on(:role)
+  end
+
   it 'users can\'t have duplicate roles for the same resource' do
     user = User.create!
     resource = Post.create!

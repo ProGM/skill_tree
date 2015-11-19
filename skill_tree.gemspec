@@ -5,7 +5,8 @@ Gem::Specification.new do |s|
   s.name        = 'skill_tree'
   s.version     = SkillTree::VERSION
   s.summary     = 'Resource-based ACL system for Rails.'
-  s.description = 'A simple and complete ACL system for Rails, that allows to specify a role for an user for a single resource.'
+  s.description = 'A simple and complete ACL system for Rails, '\
+  'that allows to specify an user-based role for a generic resource.'
   s.authors     = ['Piero Dotti']
   s.email       = ['piero@foldesk.com']
   s.files       = Dir['lib/**/*']
